@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Backend.API.RESTful.Models
 {
     [Table("Users")]
-    public class UsersModel
+    public class UserModel
     {
         [Key]
         public int IDUser { get; set; }
@@ -20,6 +20,6 @@ namespace Backend.API.RESTful.Models
         public int IDRol {  get; set; }
 
         [ForeignKey("IDRol")]
-        public virtual RolesModel? Roles { get; set; }
+        public virtual RolModel? Roles { get; set; }
     }
 }
