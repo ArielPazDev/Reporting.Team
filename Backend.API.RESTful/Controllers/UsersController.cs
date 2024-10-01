@@ -13,11 +13,11 @@ namespace Backend.API.RESTful.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public UserController(AppDbContext context)
+        public UsersController(AppDbContext context)
         {
             _context = context;
         }

@@ -13,11 +13,11 @@ namespace Backend.API.RESTful.Controllers
 {
     [Route("api/roles")]
     [ApiController]
-    public class RolController : ControllerBase
+    public class RolesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public RolController(AppDbContext context)
+        public RolesController(AppDbContext context)
         {
             _context = context;
         }
@@ -117,6 +117,14 @@ namespace Backend.API.RESTful.Controllers
                 Log.Error($"Endpoint access DELETE api/roles/{id} (not found)");
 
                 return NotFound();
+            }
+
+            if (_context.Users.Any(e => e.IDRol == id))
+            {
+                // Log
+                Log.Error($"Endpoint access DELETE api/roles/{id} (the role {id} cannot be deleted, if there are user/s with this role assigned)");
+
+                return Conflict(new { message = $"The role {id} cannot be deleted, if there are user/s with this role assigned" });
             }
 
             _context.Roles.Remove(rolModel);
