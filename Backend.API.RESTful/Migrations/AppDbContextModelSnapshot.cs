@@ -53,6 +53,10 @@ namespace Backend.API.RESTful.Migrations
                     b.Property<int>("Document")
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("IDRol")
                         .HasColumnType("int");
 
@@ -61,6 +65,10 @@ namespace Backend.API.RESTful.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameLast")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

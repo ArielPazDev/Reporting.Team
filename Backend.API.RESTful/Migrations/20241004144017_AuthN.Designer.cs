@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.API.RESTful.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241001070929_Initial")]
-    partial class Initial
+    [Migration("20241004144017_AuthN")]
+    partial class AuthN
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,10 @@ namespace Backend.API.RESTful.Migrations
                     b.Property<int>("Document")
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("IDRol")
                         .HasColumnType("int");
 
@@ -64,6 +68,10 @@ namespace Backend.API.RESTful.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameLast")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

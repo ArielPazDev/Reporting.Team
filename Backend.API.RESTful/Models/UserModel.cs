@@ -13,6 +13,10 @@ namespace Backend.API.RESTful.Models
 
         public string NameLast { get; set; }
 
+        public string Email {  get; set; }
+
+        public string Password {  get; set; }
+
         public int Document { get; set; }
 
         public DateOnly Birth { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.API.RESTful.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class AuthN : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,8 @@ namespace Backend.API.RESTful.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NameFirst = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NameLast = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Document = table.Column<int>(type: "int", nullable: false),
                     Birth = table.Column<DateOnly>(type: "date", nullable: false),
                     IDRol = table.Column<int>(type: "int", nullable: false)
