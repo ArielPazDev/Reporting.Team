@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.API.RESTful.Context
 {
-    public class AppDbContext: DbContext
+    public class DatabaseContext: DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<RolModel> Roles { get; set; }

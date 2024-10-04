@@ -11,10 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>
-    (option => option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+builder.Services.AddDbContext<DatabaseContext>
+    (option => option.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
-builder.Services.AddScoped<HashService> ();
+builder.Services.AddScoped<HashService>();
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()

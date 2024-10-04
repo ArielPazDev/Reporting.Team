@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend.API.RESTful.Context;
 using Backend.API.RESTful.Models;
 using Serilog;
+using Backend.API.RESTful.Services;
 
 namespace Backend.API.RESTful.Controllers
 {
@@ -15,19 +16,24 @@ namespace Backend.API.RESTful.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DatabaseContext _database;
+        private readonly HashService _hash;
 
-        public UsersController(AppDbContext context)
+        public UsersController(DatabaseContext database, HashService hash)
         {
-            _context = context;
+            _database = database;
+            _hash = hash;
         }
 
         // POST: api/users
         [HttpPost]
         public async Task<ActionResult<UserModel>> PostUserModel(UserModel userModel)
         {
-            _context.Users.Add(userModel);
-            await _context.SaveChangesAsync();
+            // Password SHA256
+            userModel.Password = _hash.generateSHA256(userModel.Password);
+
+            _database.Users.Add(userModel);
+            await _database.SaveChangesAsync();
 
             // Log
             Log.Information("Endpoint access POST api/users");
@@ -42,14 +48,14 @@ namespace Backend.API.RESTful.Controllers
             // Log
             Log.Information("Endpoint access GET api/users");
 
-            return await _context.Users.ToListAsync();
+            return await _database.Users.ToListAsync();
         }
 
         // GET: api/users/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> GetUserModel(int id)
         {
-            var userModel = await _context.Users.FindAsync(id);
+            var userModel = await _database.Users.FindAsync(id);
 
             if (userModel == null)
             {
@@ -79,11 +85,11 @@ namespace Backend.API.RESTful.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(userModel).State = EntityState.Modified;
+            _database.Entry(userModel).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _database.SaveChangesAsync();
 
                 // Log
                 Log.Information($"Endpoint access PUT api/users/{id} (save changes)");
@@ -110,7 +116,7 @@ namespace Backend.API.RESTful.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserModel(int id)
         {
-            var userModel = await _context.Users.FindAsync(id);
+            var userModel = await _database.Users.FindAsync(id);
             if (userModel == null)
             {
                 // Log
@@ -119,8 +125,8 @@ namespace Backend.API.RESTful.Controllers
                 return NotFound();
             }
 
-            _context.Users.Remove(userModel);
-            await _context.SaveChangesAsync();
+            _database.Users.Remove(userModel);
+            await _database.SaveChangesAsync();
 
             // Log
             Log.Information($"Endpoint access DELETE api/users/{id} (save changes)");
@@ -130,7 +136,7 @@ namespace Backend.API.RESTful.Controllers
 
         private bool UserModelExists(int id)
         {
-            return _context.Users.Any(e => e.IDUser == id);
+            return _database.Users.Any(e => e.IDUser == id);
         }
     }
 }

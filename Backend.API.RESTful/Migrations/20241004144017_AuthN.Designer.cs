@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Backend.API.RESTful.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20241004144017_AuthN")]
     partial class AuthN
     {

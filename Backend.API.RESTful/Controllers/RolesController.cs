@@ -15,19 +15,19 @@ namespace Backend.API.RESTful.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly DatabaseContext _database;
 
-        public RolesController(AppDbContext context)
+        public RolesController(DatabaseContext database)
         {
-            _context = context;
+            _database = database;
         }
 
         // POST: api/roles
         [HttpPost]
         public async Task<ActionResult<RolModel>> PostRolModel(RolModel rolModel)
         {
-            _context.Roles.Add(rolModel);
-            await _context.SaveChangesAsync();
+            _database.Roles.Add(rolModel);
+            await _database.SaveChangesAsync();
 
             // Log
             Log.Information("Endpoint access POST api/roles");
@@ -42,14 +42,14 @@ namespace Backend.API.RESTful.Controllers
             // Log
             Log.Information("Endpoint access GET api/roles");
 
-            return await _context.Roles.ToListAsync();
+            return await _database.Roles.ToListAsync();
         }
 
         // GET: api/roles/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<RolModel>> GetRolModel(int id)
         {
-            var rolModel = await _context.Roles.FindAsync(id);
+            var rolModel = await _database.Roles.FindAsync(id);
 
             if (rolModel == null)
             {
@@ -79,11 +79,11 @@ namespace Backend.API.RESTful.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(rolModel).State = EntityState.Modified;
+            _database.Entry(rolModel).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _database.SaveChangesAsync();
 
                 // Log
                 Log.Information($"Endpoint access PUT api/roles/{id} (save changes)");
@@ -110,7 +110,7 @@ namespace Backend.API.RESTful.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRolModel(int id)
         {
-            var rolModel = await _context.Roles.FindAsync(id);
+            var rolModel = await _database.Roles.FindAsync(id);
             if (rolModel == null)
             {
                 // Log
@@ -119,7 +119,7 @@ namespace Backend.API.RESTful.Controllers
                 return NotFound();
             }
 
-            if (_context.Users.Any(e => e.IDRol == id))
+            if (_database.Users.Any(e => e.IDRol == id))
             {
                 // Log
                 Log.Error($"Endpoint access DELETE api/roles/{id} (the role {id} cannot be deleted, if there are user/s with this role assigned)");
@@ -127,8 +127,8 @@ namespace Backend.API.RESTful.Controllers
                 return Conflict(new { message = $"The role {id} cannot be deleted, if there are user/s with this role assigned" });
             }
 
-            _context.Roles.Remove(rolModel);
-            await _context.SaveChangesAsync();
+            _database.Roles.Remove(rolModel);
+            await _database.SaveChangesAsync();
 
             // Log
             Log.Information($"Endpoint access DELETE api/roles/{id} (save changes)");
@@ -138,7 +138,7 @@ namespace Backend.API.RESTful.Controllers
 
         private bool RolModelExists(int id)
         {
-            return _context.Roles.Any(e => e.IDRol == id);
+            return _database.Roles.Any(e => e.IDRol == id);
         }
     }
 }
