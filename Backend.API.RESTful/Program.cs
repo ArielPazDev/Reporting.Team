@@ -1,4 +1,5 @@
 using Backend.API.RESTful.Context;
+using Backend.API.RESTful.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+
+builder.Services.AddScoped<HashService> ();
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
