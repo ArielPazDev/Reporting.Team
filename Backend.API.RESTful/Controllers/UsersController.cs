@@ -9,11 +9,13 @@ using Backend.API.RESTful.Context;
 using Backend.API.RESTful.Models;
 using Serilog;
 using Backend.API.RESTful.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.API.RESTful.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly DatabaseContext _database;
@@ -30,7 +32,7 @@ namespace Backend.API.RESTful.Controllers
         public async Task<ActionResult<UserModel>> PostUserModel(UserModel userModel)
         {
             // Password SHA256
-            userModel.Password = _hash.generateSHA256(userModel.Password);
+            userModel.Password = _hash.GenerateSHA256(userModel.Password);
 
             _database.Users.Add(userModel);
             await _database.SaveChangesAsync();
@@ -52,7 +54,8 @@ namespace Backend.API.RESTful.Controllers
         }
 
         // GET: api/users/{id}
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<ActionResult<UserModel>> GetUserModel(int id)
         {
             var userModel = await _database.Users.FindAsync(id);
@@ -74,7 +77,8 @@ namespace Backend.API.RESTful.Controllers
         }
 
         // PUT: api/users/{id}
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("{id}")]
         public async Task<IActionResult> PutUserModel(int id, UserModel userModel)
         {
             if (id != userModel.IDUser)
@@ -84,6 +88,8 @@ namespace Backend.API.RESTful.Controllers
 
                 return BadRequest();
             }
+
+            userModel.Password = _hash.GenerateSHA256(userModel.Password);
 
             _database.Entry(userModel).State = EntityState.Modified;
 
@@ -113,7 +119,8 @@ namespace Backend.API.RESTful.Controllers
         }
 
         // DELETE: api/users/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteUserModel(int id)
         {
             var userModel = await _database.Users.FindAsync(id);

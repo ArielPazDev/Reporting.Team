@@ -5,7 +5,7 @@ namespace Backend.API.RESTful.Services
 {
     public class HashService
     {
-        public string generateSHA256(string message)
+        public string GenerateSHA256(string message)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
