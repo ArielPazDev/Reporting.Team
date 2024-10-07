@@ -1,5 +1,6 @@
 ﻿using Backend.API.RESTful.Context;
 using Backend.API.RESTful.DTOs;
+using Backend.API.RESTful.Models;
 using Backend.API.RESTful.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,26 @@ namespace Backend.API.RESTful.Controllers
                     token = _jwt.GenerateToken(user)
                 });
             }
+        }
+
+        // POST: api/sign/up
+        [HttpPost]
+        [Route("up")]
+        public async Task<ActionResult> Signup(UserModel userModel)
+        {
+            // Password SHA256
+            userModel.Password = _hash.GenerateSHA256(userModel.Password);
+
+            _database.Users.Add(userModel);
+            await _database.SaveChangesAsync();
+
+            // Log
+            Log.Information("Endpoint access POST api/sign/up");
+
+            return Ok(new
+            {
+                message = "The sign up details are correct"
+            });
         }
     }
 }

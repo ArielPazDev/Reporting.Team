@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 
@@ -14,14 +15,18 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
-
+// Dependency Injection
 builder.Services.AddScoped<HashService>();
 builder.Services.AddScoped<JwtService>();
 
+// Swagger
+builder.Services.AddSwaggerGen();
+
+// Database
 builder.Services.AddDbContext<DatabaseContext>
     (option => option.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
+// JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -40,6 +45,7 @@ builder.Services.AddAuthentication(options =>
 
     });
 
+// Log
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Logger(l => l.Filter.ByIncludingOnly(evt => evt.Level == Serilog.Events.LogEventLevel.Error)
@@ -59,7 +65,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
