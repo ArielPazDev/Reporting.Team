@@ -27,4 +27,4 @@ Asegúrate de tener lo siguiente instalado antes de ejecutar el proyecto:
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tuusuario/reporting-team.git
+   git clone https://github.com/ArielPazDev/ReportingTeam.git
